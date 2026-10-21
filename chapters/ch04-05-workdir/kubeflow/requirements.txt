@@ -1,0 +1,8 @@
+evidently==0.4.6
+kfp==1.8.12
+minio==7.1.16
+mlflow==2.6.0
+pandas==1.5.3
+pydantic==1.10.12
+boto3>=1.17.0,<2
+docker>=5.0.2

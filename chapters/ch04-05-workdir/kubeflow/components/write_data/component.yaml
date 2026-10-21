@@ -1,0 +1,21 @@
+name: Write Data To Minio
+description: Writes data back to MinIO
+inputs:
+- {name: minio_host, type: String}
+- {name: access_key, type: String}
+- {name: secret_key, type: String}
+- {name: bucket_name, type: String}
+- {name: file_name, type: String}
+- {name: input_data_path, type: OutputPath}
+
+implementation:
+    container:
+      image: 'varunmallya/write-minio-data:latest'
+      command: [python3, /app/src/write_data/write_data.py,
+                --minio_host, {inputValue: minio_host},
+                --access_key, {inputValue: access_key},
+                --secret_key, {inputValue: secret_key},
+                --bucket_name, {inputValue: bucket_name},
+                --file_name, {inputValue: file_name},
+                --input_data_path, {inputPath: input_data_path}
+      ]

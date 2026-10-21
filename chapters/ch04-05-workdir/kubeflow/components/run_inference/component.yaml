@@ -1,0 +1,22 @@
+name: Model Inference
+description: Run model inference after retreving model from MLflow
+inputs:
+- {name: model_name, type: String}
+- {name: model_type, type: String}
+- {name: model_stage, type: String}
+- {name: mlflow_host, type: String}
+- {name: input_data_path, type: OutputPath}
+
+outputs:
+- {name: data_output_path, type: OutputPath}
+implementation:
+    container:
+      image: 'varunmallya/run-inference:v6'
+      command: [python3, /app/src/run_inference/run_inference.py,
+                --model_name, {inputValue: model_name},
+                --model_type, {inputValue: model_type},
+                --model_stage, {inputValue: model_stage},
+                --mlflow_host, {inputValue: mlflow_host},
+                --input_data_path, {inputPath: input_data_path},
+                --data_output_path, {outputPath: data_output_path}
+      ]

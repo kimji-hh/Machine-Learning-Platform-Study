@@ -1,0 +1,26 @@
+name: Retrieve Features From Feast
+description: Retrieves Features from Feast where the feature_store yaml is stored in MinIO
+inputs:
+- {name: minio_host, type: String}
+- {name: access_key, type: String}
+- {name: secret_key, type: String}
+- {name: bucket_name, type: String}
+- {name: file_name, type: String}
+- {name: entity_df_path, type: OutputPath}
+- {name: feature_list, type: String}
+
+outputs:
+- {name: data_output_path, type: OutputPath}
+implementation:
+    container:
+      image: 'varunmallya/retrieve-feast-features:v1'
+      command: [python3, /app/src/retrieve_features/retrieve_features.py,
+                --minio_host, {inputValue: minio_host},
+                --access_key, {inputValue: access_key},
+                --secret_key, {inputValue: secret_key},
+                --bucket_name, {inputValue: bucket_name},
+                --file_name, {inputValue: file_name},
+                --entity_df_path, {inputPath: entity_df_path},
+                --feature_list, {inputValue: feature_list},
+                --data_output_path, {outputPath: data_output_path}
+      ]

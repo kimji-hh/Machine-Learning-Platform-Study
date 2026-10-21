@@ -1,0 +1,82 @@
+artifact_path: model
+flavors:
+  python_function:
+    data: model.xgb
+    env:
+      conda: conda.yaml
+      virtualenv: python_env.yaml
+    loader_module: mlflow.xgboost
+    python_version: 3.9.5
+  xgboost:
+    code: null
+    data: model.xgb
+    model_class: xgboost.core.Booster
+    model_format: xgb
+    xgb_version: 1.7.6
+mlflow_version: 2.6.0
+model_uuid: e66335ed3c934ff98d206d4a8b876cd1
+run_id: d24b13ea9abb4885ba370b160c4e22a0
+signature:
+  inputs: '[{"type": "double", "name": "Workclass_ Local-gov"}, {"type": "double",
+    "name": "Workclass_ Private"}, {"type": "double", "name": "Workclass_ Self-emp-inc"},
+    {"type": "double", "name": "Workclass_ Self-emp-not-inc"}, {"type": "double",
+    "name": "Workclass_ State-gov"}, {"type": "double", "name": "Workclass_ Without-pay"},
+    {"type": "double", "name": "Education_ 11th"}, {"type": "double", "name": "Education_
+    12th"}, {"type": "double", "name": "Education_ 1st-4th"}, {"type": "double", "name":
+    "Education_ 5th-6th"}, {"type": "double", "name": "Education_ 7th-8th"}, {"type":
+    "double", "name": "Education_ 9th"}, {"type": "double", "name": "Education_ Assoc-acdm"},
+    {"type": "double", "name": "Education_ Assoc-voc"}, {"type": "double", "name":
+    "Education_ Bachelors"}, {"type": "double", "name": "Education_ Doctorate"}, {"type":
+    "double", "name": "Education_ HS-grad"}, {"type": "double", "name": "Education_
+    Masters"}, {"type": "double", "name": "Education_ Preschool"}, {"type": "double",
+    "name": "Education_ Prof-school"}, {"type": "double", "name": "Education_ Some-college"},
+    {"type": "double", "name": "Marital-Status_ Married-AF-spouse"}, {"type": "double",
+    "name": "Marital-Status_ Married-civ-spouse"}, {"type": "double", "name": "Marital-Status_
+    Married-spouse-absent"}, {"type": "double", "name": "Marital-Status_ Never-married"},
+    {"type": "double", "name": "Marital-Status_ Separated"}, {"type": "double", "name":
+    "Marital-Status_ Widowed"}, {"type": "double", "name": "Occupation_ Armed-Forces"},
+    {"type": "double", "name": "Occupation_ Craft-repair"}, {"type": "double", "name":
+    "Occupation_ Exec-managerial"}, {"type": "double", "name": "Occupation_ Farming-fishing"},
+    {"type": "double", "name": "Occupation_ Handlers-cleaners"}, {"type": "double",
+    "name": "Occupation_ Machine-op-inspct"}, {"type": "double", "name": "Occupation_
+    Other-service"}, {"type": "double", "name": "Occupation_ Priv-house-serv"}, {"type":
+    "double", "name": "Occupation_ Prof-specialty"}, {"type": "double", "name": "Occupation_
+    Protective-serv"}, {"type": "double", "name": "Occupation_ Sales"}, {"type": "double",
+    "name": "Occupation_ Tech-support"}, {"type": "double", "name": "Occupation_ Transport-moving"},
+    {"type": "double", "name": "Relationship_ Not-in-family"}, {"type": "double",
+    "name": "Relationship_ Other-relative"}, {"type": "double", "name": "Relationship_
+    Own-child"}, {"type": "double", "name": "Relationship_ Unmarried"}, {"type": "double",
+    "name": "Relationship_ Wife"}, {"type": "double", "name": "Race_ Asian-Pac-Islander"},
+    {"type": "double", "name": "Race_ Black"}, {"type": "double", "name": "Race_ Other"},
+    {"type": "double", "name": "Race_ White"}, {"type": "double", "name": "Sex_ Male"},
+    {"type": "double", "name": "Native_country_ Canada"}, {"type": "double", "name":
+    "Native_country_ China"}, {"type": "double", "name": "Native_country_ Columbia"},
+    {"type": "double", "name": "Native_country_ Cuba"}, {"type": "double", "name":
+    "Native_country_ Dominican-Republic"}, {"type": "double", "name": "Native_country_
+    Ecuador"}, {"type": "double", "name": "Native_country_ El-Salvador"}, {"type":
+    "double", "name": "Native_country_ England"}, {"type": "double", "name": "Native_country_
+    France"}, {"type": "double", "name": "Native_country_ Germany"}, {"type": "double",
+    "name": "Native_country_ Greece"}, {"type": "double", "name": "Native_country_
+    Guatemala"}, {"type": "double", "name": "Native_country_ Haiti"}, {"type": "double",
+    "name": "Native_country_ Holand-Netherlands"}, {"type": "double", "name": "Native_country_
+    Honduras"}, {"type": "double", "name": "Native_country_ Hong"}, {"type": "double",
+    "name": "Native_country_ Hungary"}, {"type": "double", "name": "Native_country_
+    India"}, {"type": "double", "name": "Native_country_ Iran"}, {"type": "double",
+    "name": "Native_country_ Ireland"}, {"type": "double", "name": "Native_country_
+    Italy"}, {"type": "double", "name": "Native_country_ Jamaica"}, {"type": "double",
+    "name": "Native_country_ Japan"}, {"type": "double", "name": "Native_country_
+    Laos"}, {"type": "double", "name": "Native_country_ Mexico"}, {"type": "double",
+    "name": "Native_country_ Nicaragua"}, {"type": "double", "name": "Native_country_
+    Outlying-US(Guam-USVI-etc)"}, {"type": "double", "name": "Native_country_ Peru"},
+    {"type": "double", "name": "Native_country_ Philippines"}, {"type": "double",
+    "name": "Native_country_ Poland"}, {"type": "double", "name": "Native_country_
+    Portugal"}, {"type": "double", "name": "Native_country_ Puerto-Rico"}, {"type":
+    "double", "name": "Native_country_ Scotland"}, {"type": "double", "name": "Native_country_
+    South"}, {"type": "double", "name": "Native_country_ Taiwan"}, {"type": "double",
+    "name": "Native_country_ Thailand"}, {"type": "double", "name": "Native_country_
+    Trinadad&Tobago"}, {"type": "double", "name": "Native_country_ United-States"},
+    {"type": "double", "name": "Native_country_ Vietnam"}, {"type": "double", "name":
+    "Native_country_ Yugoslavia"}]'
+  outputs: '[{"type": "tensor", "tensor-spec": {"dtype": "float32", "shape": [-1]}}]'
+  params: null
+utc_time_created: '2023-10-08 04:00:12.081094'

@@ -1,0 +1,368 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Workflow
+metadata:
+  generateName: income-classifier-pipeline-
+  annotations: {pipelines.kubeflow.org/kfp_sdk_version: 1.8.12, pipelines.kubeflow.org/pipeline_compilation_time: '2023-10-21T12:35:03.024427',
+    pipelines.kubeflow.org/pipeline_spec: '{"description": "A Kubeflow pipeline to
+      classify income categories", "inputs": [{"default": "", "name": "minio_host",
+      "optional": true, "type": "String"}, {"default": "", "name": "access_key", "optional":
+      true, "type": "String"}, {"default": "", "name": "secret_key", "optional": true,
+      "type": "String"}, {"default": "", "name": "entity_df_bucket", "optional": true,
+      "type": "String"}, {"default": "", "name": "entity_df_filename", "optional":
+      true, "type": "String"}, {"default": "", "name": "feature_store_bucket_name",
+      "optional": true, "type": "String"}, {"default": "", "name": "feature_store_config_file_name",
+      "optional": true, "type": "String"}, {"default": "", "name": "feature_list",
+      "optional": true, "type": "String"}, {"default": "", "name": "model_name", "optional":
+      true, "type": "String"}, {"default": "", "name": "model_type", "optional": true,
+      "type": "String"}, {"default": "", "name": "model_stage", "optional": true,
+      "type": "String"}, {"default": "", "name": "mlflow_host", "optional": true,
+      "type": "String"}, {"default": "", "name": "output_bucket", "optional": true,
+      "type": "String"}, {"default": "", "name": "output_file_name", "optional": true,
+      "type": "String"}, {"default": "", "name": "reference_dataset_name", "optional":
+      true, "type": "String"}, {"default": "", "name": "minio_drift_dashboard_path",
+      "optional": true, "type": "String"}, {"default": "", "name": "evidently_ui_project_id",
+      "optional": true, "type": "String"}, {"default": "", "name": "evidently_workspace_url",
+      "optional": true, "type": "String"}, {"default": "0.5", "name": "share_of_drift_threshold",
+      "optional": true, "type": "Float"}], "name": "income-classifier-pipeline"}'}
+  labels: {pipelines.kubeflow.org/kfp_sdk_version: 1.8.12}
+spec:
+  entrypoint: income-classifier-pipeline
+  templates:
+  - name: detect-data-drift
+    container:
+      args: []
+      command: [python3, /app/src/detect_drift/detect_drift.py, --model_name, '{{inputs.parameters.model_name}}',
+        --model_stage, '{{inputs.parameters.model_stage}}', --mlflow_host, '{{inputs.parameters.mlflow_host}}',
+        --minio_host, '{{inputs.parameters.minio_host}}', --access_key, '{{inputs.parameters.access_key}}',
+        --secret_key, '{{inputs.parameters.secret_key}}', --reference_dataset_name,
+        '{{inputs.parameters.reference_dataset_name}}', --share_of_drift_threshold,
+        '{{inputs.parameters.share_of_drift_threshold}}', --feature_dataset_path,
+        /tmp/inputs/feature_dataset_path/data, --minio_drift_dashboard_path, '{{inputs.parameters.minio_drift_dashboard_path}}',
+        --evidently_workspace_url, '{{inputs.parameters.evidently_workspace_url}}',
+        --evidently_ui_project_id, '{{inputs.parameters.evidently_ui_project_id}}']
+      image: varunmallya/detect-data-drift:v7
+      imagePullPolicy: Always
+    inputs:
+      parameters:
+      - {name: access_key}
+      - {name: evidently_ui_project_id}
+      - {name: evidently_workspace_url}
+      - {name: minio_drift_dashboard_path}
+      - {name: minio_host}
+      - {name: mlflow_host}
+      - {name: model_name}
+      - {name: model_stage}
+      - {name: reference_dataset_name}
+      - {name: secret_key}
+      - {name: share_of_drift_threshold}
+      artifacts:
+      - {name: retrieve-features-from-feast-data_output_path, path: /tmp/inputs/feature_dataset_path/data}
+    metadata:
+      labels:
+        pipelines.kubeflow.org/kfp_sdk_version: 1.8.12
+        pipelines.kubeflow.org/pipeline-sdk-type: kfp
+        pipelines.kubeflow.org/enable_caching: "true"
+      annotations: {pipelines.kubeflow.org/component_spec: '{"description": "Detect
+          drift in inference data", "implementation": {"container": {"command": ["python3",
+          "/app/src/detect_drift/detect_drift.py", "--model_name", {"inputValue":
+          "model_name"}, "--model_stage", {"inputValue": "model_stage"}, "--mlflow_host",
+          {"inputValue": "mlflow_host"}, "--minio_host", {"inputValue": "minio_host"},
+          "--access_key", {"inputValue": "access_key"}, "--secret_key", {"inputValue":
+          "secret_key"}, "--reference_dataset_name", {"inputValue": "reference_dataset_name"},
+          "--share_of_drift_threshold", {"inputValue": "share_of_drift_threshold"},
+          "--feature_dataset_path", {"inputPath": "feature_dataset_path"}, "--minio_drift_dashboard_path",
+          {"inputValue": "minio_drift_dashboard_path"}, "--evidently_workspace_url",
+          {"inputValue": "evidently_workspace_url"}, "--evidently_ui_project_id",
+          {"inputValue": "evidently_ui_project_id"}], "image": "varunmallya/detect-data-drift:v7"}},
+          "inputs": [{"name": "model_name", "type": "String"}, {"name": "model_stage",
+          "type": "String"}, {"name": "mlflow_host", "type": "String"}, {"name": "minio_host",
+          "type": "String"}, {"name": "access_key", "type": "String"}, {"name": "secret_key",
+          "type": "String"}, {"name": "reference_dataset_name", "type": "String"},
+          {"name": "share_of_drift_threshold", "type": "Float"}, {"name": "feature_dataset_path",
+          "type": "OutputPath"}, {"name": "minio_drift_dashboard_path", "type": "String"},
+          {"name": "evidently_workspace_url", "type": "String"}, {"name": "evidently_ui_project_id",
+          "type": "String"}], "name": "Detect data drift"}', pipelines.kubeflow.org/component_ref: '{"digest":
+          "20ed0274dbd726e6a3d11259f74de003449ed2a7d9114bf77b74c0cc353e0c62", "url":
+          "components/data_drift/component.yaml"}', pipelines.kubeflow.org/arguments.parameters: '{"access_key":
+          "{{inputs.parameters.access_key}}", "evidently_ui_project_id": "{{inputs.parameters.evidently_ui_project_id}}",
+          "evidently_workspace_url": "{{inputs.parameters.evidently_workspace_url}}",
+          "minio_drift_dashboard_path": "{{inputs.parameters.minio_drift_dashboard_path}}",
+          "minio_host": "{{inputs.parameters.minio_host}}", "mlflow_host": "{{inputs.parameters.mlflow_host}}",
+          "model_name": "{{inputs.parameters.model_name}}", "model_stage": "{{inputs.parameters.model_stage}}",
+          "reference_dataset_name": "{{inputs.parameters.reference_dataset_name}}",
+          "secret_key": "{{inputs.parameters.secret_key}}", "share_of_drift_threshold":
+          "{{inputs.parameters.share_of_drift_threshold}}"}', pipelines.kubeflow.org/max_cache_staleness: P0D}
+  - name: income-classifier-pipeline
+    inputs:
+      parameters:
+      - {name: access_key}
+      - {name: entity_df_bucket}
+      - {name: entity_df_filename}
+      - {name: evidently_ui_project_id}
+      - {name: evidently_workspace_url}
+      - {name: feature_list}
+      - {name: feature_store_bucket_name}
+      - {name: feature_store_config_file_name}
+      - {name: minio_drift_dashboard_path}
+      - {name: minio_host}
+      - {name: mlflow_host}
+      - {name: model_name}
+      - {name: model_stage}
+      - {name: model_type}
+      - {name: output_bucket}
+      - {name: output_file_name}
+      - {name: reference_dataset_name}
+      - {name: secret_key}
+      - {name: share_of_drift_threshold}
+    dag:
+      tasks:
+      - name: detect-data-drift
+        template: detect-data-drift
+        dependencies: [retrieve-features-from-feast]
+        arguments:
+          parameters:
+          - {name: access_key, value: '{{inputs.parameters.access_key}}'}
+          - {name: evidently_ui_project_id, value: '{{inputs.parameters.evidently_ui_project_id}}'}
+          - {name: evidently_workspace_url, value: '{{inputs.parameters.evidently_workspace_url}}'}
+          - {name: minio_drift_dashboard_path, value: '{{inputs.parameters.minio_drift_dashboard_path}}'}
+          - {name: minio_host, value: '{{inputs.parameters.minio_host}}'}
+          - {name: mlflow_host, value: '{{inputs.parameters.mlflow_host}}'}
+          - {name: model_name, value: '{{inputs.parameters.model_name}}'}
+          - {name: model_stage, value: '{{inputs.parameters.model_stage}}'}
+          - {name: reference_dataset_name, value: '{{inputs.parameters.reference_dataset_name}}'}
+          - {name: secret_key, value: '{{inputs.parameters.secret_key}}'}
+          - {name: share_of_drift_threshold, value: '{{inputs.parameters.share_of_drift_threshold}}'}
+          artifacts:
+          - {name: retrieve-features-from-feast-data_output_path, from: '{{tasks.retrieve-features-from-feast.outputs.artifacts.retrieve-features-from-feast-data_output_path}}'}
+      - name: model-inference
+        template: model-inference
+        dependencies: [detect-data-drift, retrieve-features-from-feast]
+        arguments:
+          parameters:
+          - {name: mlflow_host, value: '{{inputs.parameters.mlflow_host}}'}
+          - {name: model_name, value: '{{inputs.parameters.model_name}}'}
+          - {name: model_stage, value: '{{inputs.parameters.model_stage}}'}
+          - {name: model_type, value: '{{inputs.parameters.model_type}}'}
+          artifacts:
+          - {name: retrieve-features-from-feast-data_output_path, from: '{{tasks.retrieve-features-from-feast.outputs.artifacts.retrieve-features-from-feast-data_output_path}}'}
+      - name: read-data-from-minio
+        template: read-data-from-minio
+        arguments:
+          parameters:
+          - {name: access_key, value: '{{inputs.parameters.access_key}}'}
+          - {name: entity_df_bucket, value: '{{inputs.parameters.entity_df_bucket}}'}
+          - {name: entity_df_filename, value: '{{inputs.parameters.entity_df_filename}}'}
+          - {name: minio_host, value: '{{inputs.parameters.minio_host}}'}
+          - {name: secret_key, value: '{{inputs.parameters.secret_key}}'}
+      - name: retrieve-features-from-feast
+        template: retrieve-features-from-feast
+        dependencies: [read-data-from-minio]
+        arguments:
+          parameters:
+          - {name: access_key, value: '{{inputs.parameters.access_key}}'}
+          - {name: feature_list, value: '{{inputs.parameters.feature_list}}'}
+          - {name: feature_store_bucket_name, value: '{{inputs.parameters.feature_store_bucket_name}}'}
+          - {name: feature_store_config_file_name, value: '{{inputs.parameters.feature_store_config_file_name}}'}
+          - {name: minio_host, value: '{{inputs.parameters.minio_host}}'}
+          - {name: secret_key, value: '{{inputs.parameters.secret_key}}'}
+          artifacts:
+          - {name: read-data-from-minio-data_output_path, from: '{{tasks.read-data-from-minio.outputs.artifacts.read-data-from-minio-data_output_path}}'}
+      - name: write-data-to-minio
+        template: write-data-to-minio
+        dependencies: [model-inference]
+        arguments:
+          parameters:
+          - {name: access_key, value: '{{inputs.parameters.access_key}}'}
+          - {name: minio_host, value: '{{inputs.parameters.minio_host}}'}
+          - {name: output_bucket, value: '{{inputs.parameters.output_bucket}}'}
+          - {name: output_file_name, value: '{{inputs.parameters.output_file_name}}'}
+          - {name: secret_key, value: '{{inputs.parameters.secret_key}}'}
+          artifacts:
+          - {name: model-inference-data_output_path, from: '{{tasks.model-inference.outputs.artifacts.model-inference-data_output_path}}'}
+  - name: model-inference
+    container:
+      args: []
+      command: [python3, /app/src/run_inference/run_inference.py, --model_name, '{{inputs.parameters.model_name}}',
+        --model_type, '{{inputs.parameters.model_type}}', --model_stage, '{{inputs.parameters.model_stage}}',
+        --mlflow_host, '{{inputs.parameters.mlflow_host}}', --input_data_path, /tmp/inputs/input_data_path/data,
+        --data_output_path, /tmp/outputs/data_output_path/data]
+      image: varunmallya/run-inference:v6
+      imagePullPolicy: Always
+    inputs:
+      parameters:
+      - {name: mlflow_host}
+      - {name: model_name}
+      - {name: model_stage}
+      - {name: model_type}
+      artifacts:
+      - {name: retrieve-features-from-feast-data_output_path, path: /tmp/inputs/input_data_path/data}
+    outputs:
+      artifacts:
+      - {name: model-inference-data_output_path, path: /tmp/outputs/data_output_path/data}
+    metadata:
+      labels:
+        pipelines.kubeflow.org/kfp_sdk_version: 1.8.12
+        pipelines.kubeflow.org/pipeline-sdk-type: kfp
+        pipelines.kubeflow.org/enable_caching: "true"
+      annotations: {pipelines.kubeflow.org/component_spec: '{"description": "Run model
+          inference after retreving model from MLflow", "implementation": {"container":
+          {"command": ["python3", "/app/src/run_inference/run_inference.py", "--model_name",
+          {"inputValue": "model_name"}, "--model_type", {"inputValue": "model_type"},
+          "--model_stage", {"inputValue": "model_stage"}, "--mlflow_host", {"inputValue":
+          "mlflow_host"}, "--input_data_path", {"inputPath": "input_data_path"}, "--data_output_path",
+          {"outputPath": "data_output_path"}], "image": "varunmallya/run-inference:v6"}},
+          "inputs": [{"name": "model_name", "type": "String"}, {"name": "model_type",
+          "type": "String"}, {"name": "model_stage", "type": "String"}, {"name": "mlflow_host",
+          "type": "String"}, {"name": "input_data_path", "type": "OutputPath"}], "name":
+          "Model Inference", "outputs": [{"name": "data_output_path", "type": "OutputPath"}]}',
+        pipelines.kubeflow.org/component_ref: '{"digest": "511db32b99840ebb39477c572c9769c87b1855571afaf43986516faae2fef11a",
+          "url": "components/run_inference/component.yaml"}', pipelines.kubeflow.org/arguments.parameters: '{"mlflow_host":
+          "{{inputs.parameters.mlflow_host}}", "model_name": "{{inputs.parameters.model_name}}",
+          "model_stage": "{{inputs.parameters.model_stage}}", "model_type": "{{inputs.parameters.model_type}}"}'}
+  - name: read-data-from-minio
+    container:
+      args: []
+      command: [python3, /app/src/read_data/read_data.py, --minio_host, '{{inputs.parameters.minio_host}}',
+        --access_key, '{{inputs.parameters.access_key}}', --secret_key, '{{inputs.parameters.secret_key}}',
+        --bucket_name, '{{inputs.parameters.entity_df_bucket}}', --file_name, '{{inputs.parameters.entity_df_filename}}',
+        --data_output_path, /tmp/outputs/data_output_path/data]
+      image: varunmallya/read-minio-data:latest
+    inputs:
+      parameters:
+      - {name: access_key}
+      - {name: entity_df_bucket}
+      - {name: entity_df_filename}
+      - {name: minio_host}
+      - {name: secret_key}
+    outputs:
+      artifacts:
+      - {name: read-data-from-minio-data_output_path, path: /tmp/outputs/data_output_path/data}
+    metadata:
+      labels:
+        pipelines.kubeflow.org/kfp_sdk_version: 1.8.12
+        pipelines.kubeflow.org/pipeline-sdk-type: kfp
+        pipelines.kubeflow.org/enable_caching: "true"
+      annotations: {pipelines.kubeflow.org/component_spec: '{"description": "Fetches
+          data from MinIO", "implementation": {"container": {"command": ["python3",
+          "/app/src/read_data/read_data.py", "--minio_host", {"inputValue": "minio_host"},
+          "--access_key", {"inputValue": "access_key"}, "--secret_key", {"inputValue":
+          "secret_key"}, "--bucket_name", {"inputValue": "bucket_name"}, "--file_name",
+          {"inputValue": "file_name"}, "--data_output_path", {"outputPath": "data_output_path"}],
+          "image": "varunmallya/read-minio-data:latest"}}, "inputs": [{"name": "minio_host",
+          "type": "String"}, {"name": "access_key", "type": "String"}, {"name": "secret_key",
+          "type": "String"}, {"name": "bucket_name", "type": "String"}, {"name": "file_name",
+          "type": "String"}], "name": "Read Data From Minio", "outputs": [{"name":
+          "data_output_path", "type": "OutputPath"}]}', pipelines.kubeflow.org/component_ref: '{"digest":
+          "49be0b11a84aba5939de4c60c5e0688f41c4b82449f513f3f52d2f3fffb704f7", "url":
+          "components/read_data/component.yaml"}', pipelines.kubeflow.org/arguments.parameters: '{"access_key":
+          "{{inputs.parameters.access_key}}", "bucket_name": "{{inputs.parameters.entity_df_bucket}}",
+          "file_name": "{{inputs.parameters.entity_df_filename}}", "minio_host": "{{inputs.parameters.minio_host}}",
+          "secret_key": "{{inputs.parameters.secret_key}}"}'}
+  - name: retrieve-features-from-feast
+    container:
+      args: []
+      command: [python3, /app/src/retrieve_features/retrieve_features.py, --minio_host,
+        '{{inputs.parameters.minio_host}}', --access_key, '{{inputs.parameters.access_key}}',
+        --secret_key, '{{inputs.parameters.secret_key}}', --bucket_name, '{{inputs.parameters.feature_store_bucket_name}}',
+        --file_name, '{{inputs.parameters.feature_store_config_file_name}}', --entity_df_path,
+        /tmp/inputs/entity_df_path/data, --feature_list, '{{inputs.parameters.feature_list}}',
+        --data_output_path, /tmp/outputs/data_output_path/data]
+      image: varunmallya/retrieve-feast-features:latest
+    inputs:
+      parameters:
+      - {name: access_key}
+      - {name: feature_list}
+      - {name: feature_store_bucket_name}
+      - {name: feature_store_config_file_name}
+      - {name: minio_host}
+      - {name: secret_key}
+      artifacts:
+      - {name: read-data-from-minio-data_output_path, path: /tmp/inputs/entity_df_path/data}
+    outputs:
+      artifacts:
+      - {name: retrieve-features-from-feast-data_output_path, path: /tmp/outputs/data_output_path/data}
+    metadata:
+      labels:
+        pipelines.kubeflow.org/kfp_sdk_version: 1.8.12
+        pipelines.kubeflow.org/pipeline-sdk-type: kfp
+        pipelines.kubeflow.org/enable_caching: "true"
+      annotations: {pipelines.kubeflow.org/component_spec: '{"description": "Retrieves
+          Features from Feast where the feature_store yaml is stored in MinIO", "implementation":
+          {"container": {"command": ["python3", "/app/src/retrieve_features/retrieve_features.py",
+          "--minio_host", {"inputValue": "minio_host"}, "--access_key", {"inputValue":
+          "access_key"}, "--secret_key", {"inputValue": "secret_key"}, "--bucket_name",
+          {"inputValue": "bucket_name"}, "--file_name", {"inputValue": "file_name"},
+          "--entity_df_path", {"inputPath": "entity_df_path"}, "--feature_list", {"inputValue":
+          "feature_list"}, "--data_output_path", {"outputPath": "data_output_path"}],
+          "image": "varunmallya/retrieve-feast-features:latest"}}, "inputs": [{"name":
+          "minio_host", "type": "String"}, {"name": "access_key", "type": "String"},
+          {"name": "secret_key", "type": "String"}, {"name": "bucket_name", "type":
+          "String"}, {"name": "file_name", "type": "String"}, {"name": "entity_df_path",
+          "type": "OutputPath"}, {"name": "feature_list", "type": "String"}], "name":
+          "Retrieve Features From Feast", "outputs": [{"name": "data_output_path",
+          "type": "OutputPath"}]}', pipelines.kubeflow.org/component_ref: '{"digest":
+          "3198c2110b1c00ef0c411645a6040b0941bbc854df764137cdca15c2296d6e5f", "url":
+          "components/retrieve_features/component.yaml"}', pipelines.kubeflow.org/arguments.parameters: '{"access_key":
+          "{{inputs.parameters.access_key}}", "bucket_name": "{{inputs.parameters.feature_store_bucket_name}}",
+          "feature_list": "{{inputs.parameters.feature_list}}", "file_name": "{{inputs.parameters.feature_store_config_file_name}}",
+          "minio_host": "{{inputs.parameters.minio_host}}", "secret_key": "{{inputs.parameters.secret_key}}"}'}
+  - name: write-data-to-minio
+    container:
+      args: []
+      command: [python3, /app/src/write_data/write_data.py, --minio_host, '{{inputs.parameters.minio_host}}',
+        --access_key, '{{inputs.parameters.access_key}}', --secret_key, '{{inputs.parameters.secret_key}}',
+        --bucket_name, '{{inputs.parameters.output_bucket}}', --file_name, '{{inputs.parameters.output_file_name}}',
+        --input_data_path, /tmp/inputs/input_data_path/data]
+      image: varunmallya/write-minio-data:latest
+    inputs:
+      parameters:
+      - {name: access_key}
+      - {name: minio_host}
+      - {name: output_bucket}
+      - {name: output_file_name}
+      - {name: secret_key}
+      artifacts:
+      - {name: model-inference-data_output_path, path: /tmp/inputs/input_data_path/data}
+    metadata:
+      labels:
+        pipelines.kubeflow.org/kfp_sdk_version: 1.8.12
+        pipelines.kubeflow.org/pipeline-sdk-type: kfp
+        pipelines.kubeflow.org/enable_caching: "true"
+      annotations: {pipelines.kubeflow.org/component_spec: '{"description": "Writes
+          data back to MinIO", "implementation": {"container": {"command": ["python3",
+          "/app/src/write_data/write_data.py", "--minio_host", {"inputValue": "minio_host"},
+          "--access_key", {"inputValue": "access_key"}, "--secret_key", {"inputValue":
+          "secret_key"}, "--bucket_name", {"inputValue": "bucket_name"}, "--file_name",
+          {"inputValue": "file_name"}, "--input_data_path", {"inputPath": "input_data_path"}],
+          "image": "varunmallya/write-minio-data:latest"}}, "inputs": [{"name": "minio_host",
+          "type": "String"}, {"name": "access_key", "type": "String"}, {"name": "secret_key",
+          "type": "String"}, {"name": "bucket_name", "type": "String"}, {"name": "file_name",
+          "type": "String"}, {"name": "input_data_path", "type": "OutputPath"}], "name":
+          "Write Data To Minio"}', pipelines.kubeflow.org/component_ref: '{"digest":
+          "87423eba32c75fadf97c4a8eca176b9a58a4518c126e679c82776b024b0a5f96", "url":
+          "components/write_data/component.yaml"}', pipelines.kubeflow.org/arguments.parameters: '{"access_key":
+          "{{inputs.parameters.access_key}}", "bucket_name": "{{inputs.parameters.output_bucket}}",
+          "file_name": "{{inputs.parameters.output_file_name}}", "minio_host": "{{inputs.parameters.minio_host}}",
+          "secret_key": "{{inputs.parameters.secret_key}}"}'}
+  arguments:
+    parameters:
+    - {name: minio_host, value: ''}
+    - {name: access_key, value: ''}
+    - {name: secret_key, value: ''}
+    - {name: entity_df_bucket, value: ''}
+    - {name: entity_df_filename, value: ''}
+    - {name: feature_store_bucket_name, value: ''}
+    - {name: feature_store_config_file_name, value: ''}
+    - {name: feature_list, value: ''}
+    - {name: model_name, value: ''}
+    - {name: model_type, value: ''}
+    - {name: model_stage, value: ''}
+    - {name: mlflow_host, value: ''}
+    - {name: output_bucket, value: ''}
+    - {name: output_file_name, value: ''}
+    - {name: reference_dataset_name, value: ''}
+    - {name: minio_drift_dashboard_path, value: ''}
+    - {name: evidently_ui_project_id, value: ''}
+    - {name: evidently_workspace_url, value: ''}
+    - {name: share_of_drift_threshold, value: '0.5'}
+  serviceAccountName: pipeline-runner

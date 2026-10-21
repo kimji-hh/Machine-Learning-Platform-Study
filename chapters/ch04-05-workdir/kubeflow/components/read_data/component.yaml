@@ -1,0 +1,21 @@
+name: Read Data From Minio
+description: Fetches data from MinIO
+inputs:
+- {name: minio_host, type: String}
+- {name: access_key, type: String}
+- {name: secret_key, type: String}
+- {name: bucket_name, type: String}
+- {name: file_name, type: String}
+outputs:
+- {name: data_output_path, type: OutputPath}
+implementation:
+    container:
+      image: 'varunmallya/read-minio-data:latest'
+      command: [python3, /app/src/read_data/read_data.py,
+                --minio_host, {inputValue: minio_host},
+                --access_key, {inputValue: access_key},
+                --secret_key, {inputValue: secret_key},
+                --bucket_name, {inputValue: bucket_name},
+                --file_name, {inputValue: file_name},
+                --data_output_path, {outputPath: data_output_path}
+      ]

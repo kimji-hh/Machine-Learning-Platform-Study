@@ -1,0 +1,44 @@
+{
+  "id": "7049af5e-a303-45a4-bb02-c6a91a800583",
+  "name": "Income Classifier",
+  "description": "Used to classify users into multiple income bands",
+  "dashboard": {
+    "name": "Income Classifier",
+    "panels": [
+      {
+        "type": "evidently.ui.dashboards.DashboardPanelCounter",
+        "id": "ca837bc9-d3e5-4782-a630-360998140005",
+        "title": "Income Classifier Batch Data Drift Dashboard",
+        "filter": {
+          "metadata_values": {},
+          "tag_values": []
+        },
+        "size": 2,
+        "agg": "none",
+        "value": null,
+        "text": null
+      },
+      {
+        "type": "evidently.ui.dashboards.DashboardPanelCounter",
+        "id": "ca837bc9-d3e5-4782-a630-360998140005",
+        "title": "Share of Drifted Features",
+        "filter": {
+          "metadata_values": {},
+          "tag_values": []
+        },
+        "size": 1,
+        "agg": "last",
+        "value": {
+          "field_path": "share_of_drifted_columns",
+          "metric_id": "DatasetDriftMetric",
+          "metric_hash": null,
+          "metric_args": {},
+          "legend": "share"
+        },
+        "text": "share"
+      }
+    ]
+  },
+  "date_from": null,
+  "date_to": null
+}

@@ -1,0 +1,22 @@
+service: "service:svc"
+labels:
+  owner: ml-engineering-team
+include:
+  - "*.py"
+  - "production.env"
+python:
+  lock_packages: false
+  packages:
+   - minio==7.1.16
+   - mlflow==2.6.0
+   - pandas==1.5.3
+   - pydantic==1.10.12
+   - boto3>=1.17.0,<2
+   - google-cloud-storage
+   - --extra-index-url https://pypi-token:glpat-41XJLFL_fayjoWH2Tjwk@gitlab.com/api/v4/projects/35900603/packages/pypi/simple
+   - feast[redis]
+docker:
+  env:
+    - ENV_NAME=production
+    - AWS_ACCESS_KEY_ID=minio
+    - AWS_SECRET_ACCESS_KEY=minio123

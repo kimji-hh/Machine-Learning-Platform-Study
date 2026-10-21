@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: evidently-ui
+  name: evidently-ui
+  namespace: evidently
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: evidently-ui
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: evidently-ui
+    spec:
+      containers:
+      - image: varunmallya/evidently-ui:latest
+        name: evidently-ui
+        ports:
+        - containerPort: 8000
+        resources: {}
+status: {}
